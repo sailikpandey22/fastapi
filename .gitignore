@@ -2,3 +2,4 @@ __pycache__
 venv1/
 .env
 vps_deploy.txt
+sql_queries.txt
