@@ -3,7 +3,7 @@ import time
 from selenium.webdriver.common.by import By
 import pickle
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+# from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -13,7 +13,7 @@ import certifi
 
 
 def openBrowser(url):
-    options = Options()
+    options = webdriver.ChromeOptions()
     options.add_argument('--no-sandbox')
     options.add_argument('--headless=new')
     options.add_argument('--disable-dev-shm-usage')
@@ -57,6 +57,7 @@ def download_image(image_url, file_path):
 
 
 def get_profile_pic(username: str):
+    print("Getting profile pic")
     browser = openBrowser(f'https://www.linkedin.com/in/{username}/')
     print("Opened browser")
     # time.sleep(1)

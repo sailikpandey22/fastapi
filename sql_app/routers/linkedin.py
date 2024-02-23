@@ -18,7 +18,7 @@ def remove_file(path: str) -> None:
 
 @router.post("/dp")
 async def get_linkedin_dp(username: schemas.Linkedin, current_user: int = Depends(oauth2.get_current_user)):
-    # print(username.username)
+    print(username.username)
     success = get_profile_pic(username.username)
     if success:
         filePath = f"./{username.username}.jpg"
