@@ -3,14 +3,17 @@ import time
 from selenium.webdriver.common.by import By
 import pickle
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
+import urllib.request
+import certifi
 
 
 def openBrowser(url):
-    options = webdriver.ChromeOptions()
+    options = Options()
     options.add_argument('--no-sandbox')
     options.add_argument('--headless=new')
     options.add_argument('--disable-dev-shm-usage')
@@ -22,7 +25,7 @@ def openBrowser(url):
     cookies = []
     cookies = pickle.load(
         open("./sql_app/routers/scrape_modules/linkedin_cookies.pkl", "rb"))
-    # print(type(cookies))
+    print(type(cookies))
     for cookie in cookies:
         driver.add_cookie(cookie)
     driver.get(url)
@@ -37,22 +40,25 @@ def closeBrowser(driver):
 
 def download_image(image_url, file_path):
     try:
-        response = requests.get(image_url)
-        if response.status_code == 200:
+        # Open the URL with the CA certificates provided by certifi
+        with urllib.request.urlopen(image_url, cafile=certifi.where()) as response:
+            # Read the response content
+            image_data = response.read()
+
+            # Write the image data to a file
             with open(file_path, 'wb') as file:
-                file.write(response.content)
+                file.write(image_data)
+
             print("Image downloaded successfully.")
             return True
-        else:
-            print("Failed to download image. Status code:", response.status_code)
-            return False
     except Exception as e:
-        print("An error occurred:", e)
+        print("An error occurred during image download:", e)
         return False
 
 
 def get_profile_pic(username: str):
     browser = openBrowser(f'https://www.linkedin.com/in/{username}/')
+    print("Opened browser")
     # time.sleep(1)
     # browser = openBrowser(
     #     "https://www.linkedin.com/login?fromSignIn=true&trk=guest_homepage-basic_nav-header-signin")
@@ -77,5 +83,5 @@ def get_profile_pic(username: str):
     )
     image_link = img_element.get_attribute("src").replace("amp;", "")
     closeBrowser(browser)
-    # print(image_link)
+    print(image_link)
     return download_image(image_link, f'./{username}.jpg')
