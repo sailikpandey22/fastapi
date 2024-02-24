@@ -1,7 +1,7 @@
 
 from fastapi import FastAPI
 from .database import engine
-from .routers import post, user, auth, vote, linkedin
+from .routers import post, user, auth, vote, linkedin, leetcode
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -30,6 +30,7 @@ app.include_router(user.router)
 app.include_router(auth.router)
 app.include_router(vote.router)
 app.include_router(linkedin.router)
+app.include_router(leetcode.router)
 
 # while True:
 
